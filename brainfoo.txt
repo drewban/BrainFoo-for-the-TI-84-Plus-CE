@@ -1,0 +1,110 @@
+"SETUP"
+⌊BFSET(1)→dim(⌊ARRAY)
+Fill(0,⌊ARRAY)
+"1234567890ABCDEFGHIJKLMNOPQRSUVWXYZθ :?"→Str3
+Lbl RS
+ClrHome
+Output(1,1,"      BRAINFOO V1.0")
+Output(2,1,"  PRESS MODE FOR SETTINGS  "
+Output(10,1,"NEW                   PREV"
+Lbl K
+0→K
+Repeat K≠0
+getKey→K
+If K=11:Goto EN
+If K=15:Goto PS
+If K=45:Stop
+If K=22:Goto ME
+Goto K
+"CODE WRITE + EXECUTE"
+Lbl EN
+ClrHome
+Input "CODE:",Str1
+Lbl PS
+ClrHome
+Fill(0,⌊ARRAY)
+1→C:1→P
+length(Str1)→L
+For(C,1,L)
+If getKey=45:Goto RS
+sub(Str1,C,1)→Str2
+If Str2="}":P+1→P
+If Str2="{":P-1→P
+If Str2="+"
+⌊ARRAY(P)+1→⌊ARRAY(P)
+If Str2="-"
+⌊ARRAY(P)-1→⌊ARRAY(P)
+If Str2="." and ⌊BFSET(2)=0
+Disp sub(Str3,⌊ARRAY(P),1)
+If Str2="." and ⌊BFSET(2)=1 or Str2="^"
+Disp ⌊ARRAY(P)
+If Str2="," and ⌊BFSET(2)=0
+Then
+Input "I:",Str4
+inString(Str3,Str4)→⌊ARRAY(P)
+End
+If Str2="," and ⌊BFSET(2)=1 or Str2="?"
+Then
+Prompt I:I→⌊ARRAY(P)
+End
+If Str2="(" and ⌊ARRAY(P)=0
+Then
+C-1→S:0→I
+Repeat sub(Str1,S,1)=")" and I=0
+S+1→S
+If sub(Str1,S,1)="("
+I+1→I
+If sub(Str1,S,1)=")"
+I-1→I
+End
+S→C
+End
+If Str2=")" and ⌊ARRAY(P)≠0
+Then
+C+1→S:0→I
+Repeat sub(Str1,S,1)="(" and I=0
+S-1→S
+If sub(Str1,S,1)=")"
+I+1→I
+If sub(Str1,S,1)="("
+I-1→I
+End
+S→C
+End
+End
+Goto RS
+"MENU"
+Lbl ME
+Menu("SETTINGS","ARRAY SIZE",AS,"NUM/ALPHA",NA,"ALPHA SEARCH",SE,"BACK",RS)
+Lbl AS
+ClrHome
+Input "NEW SIZE:",I
+I→⌊BFSET(1)
+I→dim(⌊BFSET)
+Goto ME
+Lbl NA
+ClrHome
+If ⌊BFSET(2)=0
+Then
+1→⌊BFSET(2)
+Disp "NUM"
+Else
+0→⌊BFSET(2)
+Disp "ALPHA"
+End
+Pause 
+Goto ME
+Lbl SE
+Menu("SEARCH","VEIW",VE,"FIND",FI,"BACK",ME)
+Lbl VE
+ClrHome
+Disp sub(Str3,1,26)
+Disp sub(Str3,27,13)
+Pause 
+Goto SE
+Lbl FI
+Input "CHARACTER:",Str2
+Disp Str2,"IS AT POS"
+Disp inString(Str3,Str2)
+Pause 
+Goto SE
